@@ -4,7 +4,8 @@ marked = require 'marked'
 
 module.exports = brief =
   compile: (template='', input={}) ->
-    jade.compile(template)(input)
+    jade.compile(template)
+      content: input
 
   render: (template, input, callback) ->
     fs.readFile template, 'utf8', (err, template) ->

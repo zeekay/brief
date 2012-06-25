@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+path = require('path')
+
+if (path.existsSync(__dirname + '/../src')) {
+    require('coffee-script');
+    require('../src/cli');
+} else {
+    require('../lib/cli');
+}
