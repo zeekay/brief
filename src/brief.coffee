@@ -2,6 +2,15 @@ fs     = require 'fs'
 jade   = require 'jade'
 marked = require 'marked'
 {exec} = require 'child_process'
+hljs   = require 'highlight.js'
+
+marked.setOptions
+  gfm: true
+  highlight: (code, lang) ->
+    if lang
+      hljs.highlight(lang, code).value
+    else
+      hljs.highlightAuto(code).value
 
 CWD = process.cwd()
 QUIET = false

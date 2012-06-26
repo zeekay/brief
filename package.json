@@ -20,15 +20,16 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "jade": "~0.26.2",
     "marked": "~0.2.5",
-    "jade": "~0.26.2"
+    "highlight.js": "~7.0.1"
   },
   "author": {
     "name": "Zach Kelling",
     "email": "zeekayy@gmail.com",
     "url": "https://whatit.is"
   },
-  "homepage": "https://github.com/zeekay/brief",
+  "homepage": "http://zeekay.github.com/brief",
   "licenses": [
     {
       "type": "MIT",
