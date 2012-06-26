@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-mod =  if parseInt process.version.substring 3,4 > 6 then 'fs' else 'path'
+mod =  if parseInt(process.version.substring(3,4), 10) > 6 then 'fs' else 'path'
 {existsSync} = require mod
 
 if existsSync __dirname + '/../src'
