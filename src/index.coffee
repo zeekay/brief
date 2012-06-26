@@ -3,9 +3,14 @@ jade   = require 'jade'
 marked = require 'marked'
 
 module.exports = brief =
-  compile: (template='', input={}) ->
-    marked jade.compile(template)
-      content: input
+  compile: (template, input) ->
+    if typeof input is 'string'
+      jade.compile(template)(marked input)
+    else
+      md = {}
+      for k,v of input
+        md[k] = marked v
+      jade.compile(template)(md)
 
   render: (template, input, callback) ->
     fs.readFile template, 'utf8', (err, template) ->
