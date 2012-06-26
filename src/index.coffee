@@ -1,6 +1,9 @@
 fs     = require 'fs'
 jade   = require 'jade'
 marked = require 'marked'
+exec   = require 'child_process'
+
+CWD = process.cwd()
 
 module.exports = brief =
   compile: (template, input) ->
@@ -22,3 +25,12 @@ module.exports = brief =
     brief.render template, input, (err, content) ->
       fs.writeFile output, content, 'utf8', (err) ->
         throw err if err
+
+  updateGithubPages: (template=CWD+'/index.jade', output=CWD+'/index.html', refspec='master:README.md') ->
+    exec "git show #{refspec}", (err, stdout, stderr) ->
+      content = brief.compile fs.readFileSync(template, 'utf8'), stdout
+      fs.writeFileSync output', content, 'utf8'
+      exec 'git add index.html', ->
+        exec 'git commit -m "Updated gh-pages."', ->
+          exec 'git push', ->
+            exec 'git checkout master', ->
