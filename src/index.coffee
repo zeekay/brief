@@ -4,7 +4,7 @@ marked = require 'marked'
 
 module.exports = brief =
   compile: (template='', input={}) ->
-    jade.compile(template)
+    marked jade.compile(template)
       content: input
 
   render: (template, input, callback) ->
