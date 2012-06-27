@@ -8,7 +8,10 @@ marked.setOptions
   gfm: true
   highlight: (code, lang) ->
     if lang
-      hljs.highlight(lang, code).value
+      try
+        hljs.highlight(lang, code).value
+      catch err
+        throw new Error "Unable to highlight #{lang}"
     else
       hljs.highlightAuto(code).value
 
