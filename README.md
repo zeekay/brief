@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/zeekay/brief.png)](http://travis-ci.org/zeekay/brief)
 # brief
 
 A simple tool for generating github pages (or other things from markdown/jade templates).
