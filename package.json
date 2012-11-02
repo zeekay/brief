@@ -22,8 +22,7 @@
   "dependencies": {
     "jade": "~0.26.2",
     "marked": "~0.2.5",
-    "highlight.js": "~7.0.1",
-    "coffee-script": "~1.4.0"
+    "highlight.js": "~7.0.1"
   },
   "author": {
     "name": "Zach Kelling",
@@ -38,6 +37,6 @@
     }
   ],
   "devDependencies": {
-    "coffee-script": "~1.3.3"
+    "coffee-script": "~1.4.0"
   }
 }
