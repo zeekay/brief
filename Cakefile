@@ -6,7 +6,8 @@ run = (cmd, callback) ->
       console.error stderr
     if stdout
       console.log stdout
-    if typeof cb == 'function'
+
+    if typeof callback == 'function'
       callback err, stderr, stdout
 
 task 'build', 'Build project', ->
