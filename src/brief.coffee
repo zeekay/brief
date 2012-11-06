@@ -4,6 +4,8 @@ marked = require 'marked'
 {exec} = require 'child_process'
 hljs   = require 'highlight.js'
 
+QUIET = false
+
 marked.setOptions
   gfm: true
   highlight: (code, lang) ->
@@ -15,9 +17,6 @@ marked.setOptions
     else
       hljs.highlightAuto(code).value
 
-CWD = process.cwd()
-QUIET = false
-
 run = (cmd, cb) ->
   console.log "> #{cmd}" if not QUIET
   exec cmd, (err, stdout, stderr) ->
@@ -28,41 +27,38 @@ run = (cmd, cb) ->
         console.log stdout.trim()
     cb() if typeof cb is 'function'
 
-module.exports = ({quiet}) ->
-  QUIET = quiet
-  brief =
-    compile: (template, input) ->
-      if typeof input is 'string'
-        jade.compile(template)(content: marked input)
-      else
-        md = {}
-        for k,v of input
-          md[k] = marked v
-        jade.compile(template)(md)
+compile = (template, content, ctx = {}) ->
+  ctx.content ?= marked content
+  jade.compile(template) ctx
 
-    render: (template, input, callback) ->
-      fs.readFile template, 'utf8', (err, template) ->
-        fs.readFile input, 'utf8', (err, input) ->
-          throw err if err
-          callback null, brief.compile template, input
+module.exports =
+  update: (options) ->
+    QUIET = options.quiet or false
+    cwd = process.cwd()
 
-    renderFile: (template, input, output) ->
-      brief.render template, input, (err, content) ->
-        fs.writeFile output, content, 'utf8', (err) ->
-          throw err if err
+    options.branch   ?= 'gh-pages'
+    options.remote   ?= 'origin'
+    options.content  ?= cwd + '/README.md'
+    options.output   ?= cwd + '/index.html'
+    options.push     ?= true
+    options.template ?= cwd + '/index.jade'
+    options.ctx      ?= {}
 
-    updateMaster: (template=CWD+'/index.jade', output=CWD+'/index.html', readme='README.md') ->
-      content = @compile fs.readFileSync(template, 'utf8'), fs.readFileSync(readme, 'utf8')
-      fs.writeFileSync output, content, 'utf8'
+    {branch, ctx, output, push} = options
+    content  = fs.readFileSync options.content, 'utf8'
+    template = fs.readFileSync options.template, 'utf8'
+
+    if branch == 'master'
+      fs.writeFileSync output, compile(template, content, ctx), 'utf8'
       run "git add #{output}", ->
         run 'git commit -m "Update generated content"', ->
-          run 'git push -f'
-
-    updateGithubPages: (template=CWD+'/index.jade', output=CWD+'/index.html', readme='README.md') ->
-      content = @compile fs.readFileSync(template, 'utf8'), readme
-      fs.writeFileSync output, content, 'utf8'
+          if push
+            run "git push -f #{remote} #{branch}"
+    else
       run 'git checkout gh-pages', ->
         run 'git reset --hard master', ->
+          fs.writeFileSync output, @compile(template, ctx), 'utf8'
           run "git add #{output}", ->
             run 'git commit -m "Update generated content"', ->
-              run 'git push -f origin gh-pages'
+              if push
+                run "git push -f #{remote} #{branch}"
