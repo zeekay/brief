@@ -9,4 +9,5 @@ task 'build', 'Build project', ->
 
 task 'publish', 'Publish current version to NPM', ->
   invoke 'build'
-  exec 'npm publish'
+  exec 'git push', ->
+    exec 'npm publish'
