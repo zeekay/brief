@@ -44,21 +44,25 @@ module.exports =
     options.template ?= cwd + '/index.jade'
     options.ctx      ?= {}
 
-    {branch, ctx, output, push} = options
+    {branch, remote, ctx, output, push} = options
     content  = fs.readFileSync options.content, 'utf8'
     template = fs.readFileSync options.template, 'utf8'
 
-    if branch == 'master'
-      fs.writeFileSync output, compile(template, content, ctx), 'utf8'
-      run "git add #{output}", ->
-        run 'git commit -m "Update generated content"', ->
-          if push
-            run "git push -f #{remote} #{branch}"
-    else
-      run 'git checkout gh-pages', ->
-        run 'git reset --hard master', ->
-          fs.writeFileSync output, @compile(template, ctx), 'utf8'
-          run "git add #{output}", ->
-            run 'git commit -m "Update generated content"', ->
-              if push
-                run "git push -f #{remote} #{branch}"
+    exec "git log -1 --pretty=%B", (err, stdout, stderr) ->
+      # get last commit message
+      message = stdout.trim()
+
+      if branch == 'master'
+        fs.writeFileSync output, compile(template, content, ctx), 'utf8'
+        run "git add #{output}", ->
+          run 'git commit --amend -C HEAD', ->
+            if push
+              run "git push -f #{remote} #{branch}"
+      else
+        run 'git checkout gh-pages', ->
+          run 'git reset --hard master', ->
+            fs.writeFileSync output, @compile(template, ctx), 'utf8'
+            run "git add #{output}", ->
+              run 'git commit --amend -C HEAD', ->
+                if push
+                  run "git push -f #{remote} #{branch}"
