@@ -59,10 +59,10 @@ module.exports =
             if push
               run "git push -f #{remote} #{branch}"
       else
-        run 'git checkout gh-pages', ->
+        run "git checkout #{branch}", ->
           run 'git reset --hard master', ->
-            fs.writeFileSync output, @compile(template, ctx), 'utf8'
+            fs.writeFileSync output, compile(template, content, ctx), 'utf8'
             run "git add #{output}", ->
-              run 'git commit --amend -C HEAD', ->
+              run 'git commit -m "Updating generated content"', ->
                 if push
                   run "git push -f #{remote} #{branch}"
