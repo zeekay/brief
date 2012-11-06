@@ -3,9 +3,9 @@
 run = (cmd, callback) ->
   exec cmd, (err, stderr, stdout) ->
     if stderr
-      console.error stderr.trim()
+      console.error stderr
     if stdout
-      console.log stdout.trim()
+      console.log stdout
 
     if typeof callback == 'function'
       callback err, stderr, stdout
