@@ -51,13 +51,18 @@ module.exports = ({quiet}) ->
         fs.writeFile output, content, 'utf8', (err) ->
           throw err if err
 
+    updateMaster: (template=CWD+'/index.jade', output=CWD+'/index.html', readme='README.md') ->
+      content = @compile fs.readFileSync(template, 'utf8'), fs.readFileSync(readme, 'utf8')
+      fs.writeFileSync output, content, 'utf8'
+      run "git add #{output}", ->
+        run 'git commit -m "Update generated content"', ->
+          run 'git push -f'
+
     updateGithubPages: (template=CWD+'/index.jade', output=CWD+'/index.html', readme='README.md') ->
+      content = @compile fs.readFileSync(template, 'utf8'), readme
+      fs.writeFileSync output, content, 'utf8'
       run 'git checkout gh-pages', ->
-        exec "git show master:#{readme}", (err, stdout, stderr) ->
-          console.log "brief: Compiling #{template} using #{readme}"
-          content = brief.compile fs.readFileSync(template, 'utf8'), stdout
-          fs.writeFileSync output, content, 'utf8'
+        run 'git reset --hard master', ->
           run "git add #{output}", ->
-            run 'git commit -m "Updated gh-pages."', ->
-              run 'git push', ->
-                run 'git checkout master'
+            run 'git commit -m "Update generated content"', ->
+              run 'git push -f origin gh-pages'
