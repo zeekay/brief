@@ -5,7 +5,7 @@ A simple tool for generating github pages (or other things from markdown/jade te
 ## Usage
 
 - Create a gh-pages branch.
-- Add an index.jade file which will render your content:
+- Add an index.jade file which will render your content (README.md in master branch by default):
 
         p!= content
 
@@ -13,6 +13,5 @@ A simple tool for generating github pages (or other things from markdown/jade te
 - If you use `cake` add a new task to your `Cakefile`:
 
         task 'gh-pages', 'Publish docs to gh-pages', ->
-          brief = require('brief')
-            quiet: false
-          brief.updateGithubPages()
+          brief = require 'brief'
+          brief.update()
