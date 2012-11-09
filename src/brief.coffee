@@ -32,7 +32,7 @@ compile = (template, content, ctx = {}) ->
   jade.compile(template) ctx
 
 module.exports =
-  update: (options) ->
+  update: (options = {}) ->
     QUIET = options.quiet or false
     cwd = process.cwd()
 
