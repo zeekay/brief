@@ -45,24 +45,29 @@ module.exports =
     options.ctx      ?= {}
 
     {branch, remote, ctx, output, push} = options
-    content  = fs.readFileSync options.content, 'utf8'
-    template = fs.readFileSync options.template, 'utf8'
-
     exec "git log -1 --pretty=%B", (err, stdout, stderr) ->
       # get last commit message
       message = stdout.trim()
 
       if branch == 'master'
+        content  = fs.readFileSync options.content, 'utf8'
+        template = fs.readFileSync options.template, 'utf8'
         fs.writeFileSync output, compile(template, content, ctx), 'utf8'
         run "git add #{output}", ->
           run 'git commit --amend -C HEAD', ->
             if push
               run "git push -f #{remote} #{branch}"
       else
+        content = options.content.replace(cwd, '').replace /^\//, ''
         run "git checkout #{branch}", ->
-          run 'git reset --hard master', ->
+          template = fs.readFileSync options.template, 'utf8'
+          exec "git show master:#{content}", (err, content) ->
+            throw err if err
             fs.writeFileSync output, compile(template, content, ctx), 'utf8'
             run "git add #{output}", ->
               run 'git commit -m "Updating generated content"', ->
                 if push
-                  run "git push -f #{remote} #{branch}"
+                  run "git push -f #{remote} #{branch}", ->
+                    run "git checkout master"
+                else
+                  run "git checkout master"
