@@ -17,7 +17,7 @@ task 'gh-pages', 'Generate gh-pages', ->
   brief = require 'brief'
   brief.update()
 
-task 'publish', 'Publish current version to NPM', ->
+task 'publish', 'Publish project', ->
   run './node_modules/.bin/coffee -bc -o lib/ src/', ->
     run 'git push', ->
       run 'npm publish', ->
