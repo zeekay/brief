@@ -1,9 +1,8 @@
+exec   = (require 'executive').quiet
 fs     = require 'fs'
+hljs   = require 'highlight.js'
 jade   = require 'jade'
 marked = require 'marked'
-{exec} = require 'child_process'
-hljs   = require 'highlight.js'
-mote   = require 'mote'
 
 QUIET = false
 
@@ -28,14 +27,17 @@ run = (cmd, cb) ->
         console.log stdout.trim()
     cb() if typeof cb is 'function'
 
+
 compile = (template, content, ctx = {}) ->
   ctx.content ?= marked content
-  mote.compile(template) ctx
+  jade.compile(template) ctx
+
 
 # in which our hero endeavours to uncover whether our template exists or not
 checkTemplate = (template, output) ->
   if fs.existsSync template
     return template
+
   # template not found, only output
   if fs.existsSync output and path.basename ouput == 'index.html'
     # maybe this is a github pages template?
@@ -52,9 +54,8 @@ module.exports =
     options.content  ?= cwd + '/README.md'
     options.output   ?= cwd + '/index.html'
     options.push     ?= true
-    options.template ?= cwd + '/layout.html'
+    options.template ?= cwd + '/index.jade'
     options.ctx      ?= {}
-    options.compiler ?= compiler
 
     {branch, remote, ctx, output, push} = options
 
