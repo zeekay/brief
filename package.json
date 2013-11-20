@@ -1,6 +1,6 @@
 {
   "name": "brief",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Generate and publish Github pages with great brevity.",
   "repository": {
     "type": "git",
