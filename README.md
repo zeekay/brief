@@ -1,7 +1,6 @@
 # brief
-#### Generate and publish Github pages quickly and easily
-
-A simple tool for generating github pages (or other things from markdown/jade templates).
+Generate and publish Github pages quickly and easily from markdown/jade
+templates.
 
 ## Usage
 
