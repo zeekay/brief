@@ -1,12 +1,15 @@
 {
   "name": "brief",
   "version": "0.6.1",
-  "description": "Simple markdown/jade renderer",
+  "description": "Generate and publish Github pages with great brevity.",
   "repository": {
     "type": "git",
     "url": "git://github.com/zeekay/brief.git"
   },
   "keywords": [
+    "git",
+    "github",
+    "github pages",
     "markdown",
     "jade",
     "documentation",
@@ -27,10 +30,13 @@
   },
   "author": {
     "name": "Zach Kelling",
-    "email": "zeekayy@gmail.com",
-    "url": "https://whatit.is"
+    "email": "zk@monoid.io",
+    "url": "http://zeekay.io"
   },
   "homepage": "http://zeekay.github.com/brief",
+  "bugs": {
+    "url": "http://github.com/zeekay/brief/issues"
+  },
   "licenses": [
     {
       "type": "MIT",
