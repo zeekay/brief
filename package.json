@@ -20,7 +20,8 @@
     "brief": "./bin/brief"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "cake build",
+    "test": "cake test"
   },
   "dependencies": {
     "jade": "~0.26.2",
