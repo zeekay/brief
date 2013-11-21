@@ -11,6 +11,8 @@ task 'publish', 'Publish project', ->
   exec ['git push', 'npm publish'], (err) ->
     return if err?
 
+    console.log()
+
     invoke 'gh-pages'
 
 task 'test', 'Run tests', ->
