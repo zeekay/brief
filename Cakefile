@@ -8,7 +8,9 @@ task 'gh-pages', 'Generate gh-pages', ->
   brief.update()
 
 task 'publish', 'Publish project', ->
-  exec ['git push', 'npm publish'], ->
+  exec ['git push', 'npm publish'], (err) ->
+    return if err?
+
     invoke 'gh-pages'
 
 task 'test', 'Run tests', ->
