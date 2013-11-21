@@ -10,3 +10,6 @@ task 'gh-pages', 'Generate gh-pages', ->
 task 'publish', 'Publish project', ->
   exec ['git push', 'npm publish'] ->
     invoke 'gh-pages'
+
+task 'test', 'Run tests', ->
+  console.log 'todo'
