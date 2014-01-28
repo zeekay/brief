@@ -17,4 +17,26 @@ templates.
     brief.update()</code></pre>
 </li>
 </ul>
+<h2>CLI</h2>
+<p>To update the <code>gh-pages</code> branch using defaults:
+
+</p>
+<pre><code class="lang-bash">$ brief
+> git checkout gh-pages
+Switched to branch <span class="string">'gh-pages'</span>
+Your branch is ahead of <span class="string">'origin/gh-pages'</span> by <span class="number">1</span> commit.
+> git add /Users/zk/go/src/github.com/zeekay/brief/index.html
+> git commit -m <span class="string">"Updating generated content"</span>
+[gh-pages f869f85] Updating generated content
+ <span class="number">1</span> file changed, <span class="number">29</span> insertions(+), <span class="number">71</span> deletions(-)
+ rewrite index.html (<span class="number">99</span>%)
+> git push -f origin gh-pages
+To git@github.com:zeekay/brief
+   <span class="number">0052836.</span>.f869f85  gh-pages -> gh-pages
+> git checkout master
+Switched to branch <span class="string">'master'</span>
+Your branch is up-to-date with <span class="string">'origin/master'</span>.</code></pre>
+<p>Most configuration options are available from command line, <code>brief --help</code> for
+more detail.
+</p>
 </p></section><footer></footer></div><script src="javascripts/scale.fix.js"></script></body><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script></html>
