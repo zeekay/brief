@@ -24,10 +24,10 @@
     "test": "cake test"
   },
   "dependencies": {
-    "jade": "~0.26.2",
-    "marked": "~0.2.5",
-    "highlight.js": "~7.0.1",
-    "executive": "~0.4.4"
+    "executive": "~0.4.4",
+    "highlight.js": "~8.0.0",
+    "jade": "~1.1.5",
+    "marked": "~0.3.1"
   },
   "author": {
     "name": "Zach Kelling",
