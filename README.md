@@ -6,14 +6,18 @@ templates.
 - Create a gh-pages branch.
 - Add an index.jade file which will render your content. Use `read()` to specify which file to use as content for your template:
 
-        p!= read('README.md')
+```jade
+p!= read('README.md')
+```
 
 - Make sure you have a README.md file which will be injected into your jade template.
 - If you use `cake` add a new task to your `Cakefile`:
 
-        task 'gh-pages', 'Publish docs to gh-pages', ->
-          brief = require 'brief'
-          brief.update()
+```coffeescript
+task 'gh-pages', 'Publish docs to gh-pages', ->
+  brief = require 'brief'
+  brief.update()
+```
 
 ## CLI
 To update the `gh-pages` branch using defaults:
