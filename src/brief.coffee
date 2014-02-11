@@ -4,7 +4,6 @@ hljs   = require 'highlight.js'
 jade   = require 'jade'
 marked = require 'marked'
 
-
 marked.setOptions
   gfm: true
   tables: true
@@ -20,26 +19,29 @@ marked.setOptions
 
 # find all content
 findFiles = (template) ->
-  readRe = /read\([']([^']+)[']\)|read\(["]([^"]+)["]\)/
+  readRe = /read\([']([^']+)[']\)|read\(["]([^"]+)["]\)/g
 
   matches = []
-  while found = readRe.exec template
-    matches.push found[0]
+  while (match = readRe.exec template)?
+    matches.push match[1]
   matches
-
 
 # compile jade template with appropriate context
 compile = (template, ctx, cb) ->
   for filename in findFiles template
     replace = Math.random().toString().replace '0.', '_'
     pattern = new RegExp "read\\(['\"]#{filename}['\"]\\)"
-    content = fs.readFileSync filename
+    content = fs.readFileSync filename, 'utf8'
 
     if /\.md$|\.markdown/.test filename
-      content = marked content
+      try
+        content = marked content
+      catch err
+        console.error err
+        throw err
 
-    ctx[key] = content
-    template.replace pattern, replace
+    ctx[replace] = content
+    template = template.replace pattern, replace
 
   cb null, (jade.compile template, pretty: true) ctx
 
@@ -48,28 +50,19 @@ runSafe = (cmd, cb = ->) ->
   console.log "> #{cmd}"
 
   exec cmd, (err, stdout, stderr) ->
-    throw err if err?
-
     stderr = stderr.trim()
-    if stderr
-      console.error stderr
-      process.exit 1
-
     stdout = stdout.trim()
-    console.log stdout if stdout
 
+    console.log stdout if stdout
+    console.error stderr if stderr
+
+    throw err if err?
     cb null
 
 # ...technically also safe-ish
 runQuiet = (cmd, cb = ->) ->
-  exec cmd, (err, stdout, stderr) ->
+  exec cmd, (err) ->
     throw err if err?
-
-    stderr = stderr.trim()
-    if stderr
-      console.error stderr
-      process.exit 1
-
     cb null
 
 module.exports =
@@ -80,15 +73,15 @@ module.exports =
     branch       = options.branch   ? 'gh-pages'
     remote       = options.remote   ? 'origin'
     push         = options.push     ? true
-    run          = runSafe unless options.quiet then runQuiet
+    run          = if options.quiet then runQuiet else runSafe
 
     # update github page in master branch
     updateMaster = ->
       run 'git checkout master', ->
-        template = fs.readFileSync templateFile
+        template = fs.readFileSync templateFile, 'utf8'
 
         compile template, ctx, (err, output) ->
-          fs.writeFileSync outputFile, output
+          fs.writeFileSync outputFile, output, 'utf8'
 
           run "git add #{outputFile}", ->
             run 'git commit --amend -C HEAD', ->
@@ -97,14 +90,12 @@ module.exports =
 
     # upate github page in gh-pages branch
     updateGhPages = ->
-      runQuiet 'git checkout gh-pages', ->
-        template = fs.readFileSync templateFile
-
-        runQuiet 'git checkout master', ->
+      run 'git checkout gh-pages', ->
+        template = fs.readFileSync templateFile, 'utf8'
+        run 'git checkout master', ->
           compile template, ctx, (err, output) ->
-
             run 'git checkout gh-pages', ->
-              fs.writeFileSync outputFile, output
+              fs.writeFileSync outputFile, output, 'utf8'
 
               run "git add #{outputFile}", ->
                 run 'git commit -m "Updating generated content"', ->
@@ -114,7 +105,7 @@ module.exports =
                   else
                     run 'git checkout master'
 
-      if branch == 'master'
-        updateMaster()
-      else
-        updateGhPages()
+    if branch == 'master'
+      updateMaster()
+    else
+      updateGhPages()
