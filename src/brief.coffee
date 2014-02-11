@@ -70,7 +70,7 @@ module.exports =
           console.error stderr if stderr
 
         if err?
-          run 'git checkout master', ->
+          exec 'git checkout master', ->
             process.exit 1
         else
           cb null
