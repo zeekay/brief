@@ -73,32 +73,42 @@ module.exports =
     branch       = options.branch   ? 'gh-pages'
     remote       = options.remote   ? 'origin'
     push         = options.push     ? true
-    run          = if options.quiet then runQuiet else runSafe
+    quiet        = options.quiet    ? false
+    run          = if quiet then runQuiet else runSafe
 
     # update github page in master branch
     updateMaster = ->
       run 'git checkout master', ->
-        template = fs.readFileSync templateFile, 'utf8'
+        console.log "- using #{templateFile} as template" unless quiet
 
+        template = fs.readFileSync templateFile, 'utf8'
         compile template, ctx, (err, output) ->
+
+          console.log "- writing #{outputFile}" unless quiet
           fs.writeFileSync outputFile, output, 'utf8'
 
           run "git add #{outputFile}", ->
             run 'git commit --amend -C HEAD', ->
+
               if push
                 run "git push -f #{remote} master"
 
     # upate github page in gh-pages branch
     updateGhPages = ->
       run 'git checkout gh-pages', ->
+        console.log "- using #{templateFile} as template" unless quiet
         template = fs.readFileSync templateFile, 'utf8'
+
         run 'git checkout master', ->
           compile template, ctx, (err, output) ->
+
             run 'git checkout gh-pages', ->
+              console.log "- writing #{outputFile}" unless quiet
               fs.writeFileSync outputFile, output, 'utf8'
 
               run "git add #{outputFile}", ->
                 run 'git commit -m "Updating generated content"', ->
+
                   if push
                     run "git push -f #{remote} gh-pages", ->
                       run 'git checkout master'
