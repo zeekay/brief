@@ -47,26 +47,6 @@ compile = (template, ctx, quiet, cb) ->
 
   cb null, (jade.compile template, pretty: true) ctx
 
-# run command and exit if anything bad happens
-runSafe = (cmd, cb = ->) ->
-  console.log "> #{cmd}"
-
-  exec cmd, (err, stdout, stderr) ->
-    stderr = stderr.trim()
-    stdout = stdout.trim()
-
-    console.log stdout if stdout
-    console.error stderr if stderr
-
-    process.exit 1 if err?
-    cb null
-
-# ...technically also safe-ish
-runQuiet = (cmd, cb = ->) ->
-  exec cmd, (err) ->
-    process.exit 1 if err?
-    cb null
-
 module.exports =
   update: (options = {}) ->
     templateFile = options.template ? 'index.jade'
@@ -76,7 +56,24 @@ module.exports =
     remote       = options.remote   ? 'origin'
     push         = options.push     ? true
     quiet        = options.quiet    ? false
-    run          = if quiet then runQuiet else runSafe
+
+    # run command and exit if anything bad happens
+    run = (cmd, cb = ->) ->
+      console.log "> #{cmd}" unless quiet
+
+      exec cmd, (err, stdout, stderr) ->
+        unless quiet
+          stderr = stderr.trim()
+          stdout = stdout.trim()
+
+          console.log stdout if stdout
+          console.error stderr if stderr
+
+        if err?
+          run 'git checkout master', ->
+            process.exit 1
+        else
+          cb null
 
     # update github page in master branch
     updateMaster = ->
