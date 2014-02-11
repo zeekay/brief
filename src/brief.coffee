@@ -69,8 +69,8 @@ runQuiet = (cmd, cb = ->) ->
 
 module.exports =
   update: (options = {}) ->
-    templateFile = options.template ? process.cwd() + '/index.jade'
-    outputFile   = options.output   ? process.cwd() + '/index.html'
+    templateFile = options.template ? 'index.jade'
+    outputFile   = options.output   ? 'index.html'
     ctx          = options.ctx      ? {}
     branch       = options.branch   ? 'gh-pages'
     remote       = options.remote   ? 'origin'
