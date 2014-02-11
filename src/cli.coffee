@@ -4,8 +4,7 @@ brief   = require './index'
 
 program
   .version(version)
-  .usage('-c <content> -o <output> -t <template>')
-  .option('-c, --content <file>', 'markdown file to use as content')
+  .usage('-t <template> -o <output>')
   .option('-o, --output <file>', 'where to output rendered content')
   .option('-t, --template <file>', 'jade template to use')
   .parse(process.argv)
@@ -15,6 +14,5 @@ help = ->
   process.exit()
 
 brief.update
-  content:  program.content
   output:   program.output
   template: program.template
