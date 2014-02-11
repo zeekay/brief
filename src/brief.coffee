@@ -18,83 +18,103 @@ marked.setOptions
     else
       hljs.highlightAuto(code).value
 
+# find all content
+findFiles = (template) ->
+  readRe = /read\([']([^']+)[']\)|read\(["]([^"]+)["]\)/
 
-compile = (template, content, ctx = {}) ->
-  ctx.content ?= marked content
-  jade.compile(template) ctx
+  matches = []
+  while found = readRe.exec template
+    matches.push found[0]
+  matches
 
 
-# in which our hero endeavours to uncover whether our template exists or not
-checkTemplate = (template, output) ->
-  if fs.existsSync template
-    return template
+# compile jade template with appropriate context
+compile = (template, ctx, cb) ->
+  for filename in findFiles template
+    replace = Math.random().toString().replace '0.', '_'
+    pattern = new RegExp "read\\(['\"]#{filename}['\"]\\)"
+    content = fs.readFileSync filename
 
-  # template not found, only output
-  if fs.existsSync output and path.basename ouput == 'index.html'
-    # maybe this is a github pages template?
-    return
+    if /\.md$|\.markdown/.test filename
+      content = marked content
 
+    ctx[key] = content
+    template.replace pattern, replace
+
+  cb null, (jade.compile template, pretty: true) ctx
+
+# run command and exit if anything bad happens
+runSafe = (cmd, cb = ->) ->
+  console.log "> #{cmd}"
+
+  exec cmd, (err, stdout, stderr) ->
+    throw err if err?
+
+    stderr = stderr.trim()
+    if stderr
+      console.error stderr
+      process.exit 1
+
+    stdout = stdout.trim()
+    console.log stdout if stdout
+
+    cb null
+
+# ...technically also safe-ish
+runQuiet = (cmd, cb = ->) ->
+  exec cmd, (err, stdout, stderr) ->
+    throw err if err?
+
+    stderr = stderr.trim()
+    if stderr
+      console.error stderr
+      process.exit 1
+
+    cb null
 
 module.exports =
   update: (options = {}) ->
-    cwd = process.cwd()
-    quiet = options.quiet ? false
-
-    options.branch   ?= 'gh-pages'
-    options.remote   ?= 'origin'
-    options.content  ?= cwd + '/README.md'
-    options.output   ?= cwd + '/index.html'
-    options.push     ?= true
-    options.template ?= cwd + '/index.jade'
-    options.ctx      ?= {}
-
-    {branch, remote, ctx, output, push} = options
-
-    run = (cmd, cb = ->) ->
-      console.log "> #{cmd}" unless quiet
-
-      exec cmd, (err, stdout, stderr) ->
-        return if quiet
-
-        stderr = stderr.trim()
-        stdout = stdout.trim()
-
-        console.log stderr if stderr
-        console.log stdout if stdout
-
-        cb()
+    templateFile = options.template ? process.cwd() + '/index.jade'
+    outputFile   = options.output   ? process.cwd() + '/index.html'
+    ctx          = options.ctx      ? {}
+    branch       = options.branch   ? 'gh-pages'
+    remote       = options.remote   ? 'origin'
+    push         = options.push     ? true
+    run          = runSafe unless options.quiet then runQuiet
 
     # update github page in master branch
     updateMaster = ->
-      content  = fs.readFileSync options.content, 'utf8'
-      template = fs.readFileSync options.template, 'utf8'
-      fs.writeFileSync output, compile(template, content, ctx), 'utf8'
+      run 'git checkout master', ->
+        template = fs.readFileSync templateFile
 
-      run "git add #{output}", ->
-        run 'git commit --amend -C HEAD', ->
-          if push
-            run "git push -f #{remote} #{branch}"
+        compile template, ctx, (err, output) ->
+          fs.writeFileSync outputFile, output
+
+          run "git add #{outputFile}", ->
+            run 'git commit --amend -C HEAD', ->
+              if push
+                run "git push -f #{remote} master"
 
     # upate github page in gh-pages branch
-    updateBranch = ->
-      content = options.content.replace(cwd, '').replace /^\//, ''
+    updateGhPages = ->
+      runQuiet 'git checkout gh-pages', ->
+        template = fs.readFileSync templateFile
 
-      run "git checkout #{branch}", ->
-        template = fs.readFileSync options.template, 'utf8'
+        runQuiet 'git checkout master', ->
+          compile template, ctx, (err, output) ->
 
-        exec "git show master:#{content}", (err, content) ->
-          throw err if err
-          fs.writeFileSync output, compile(template, content, ctx), 'utf8'
+            run 'git checkout gh-pages', ->
+              fs.writeFileSync outputFile, output
 
-          run "git add #{output}", ->
-            run 'git commit -m "Updating generated content"', ->
-              if push
-                run "git push -f #{remote} #{branch}", ->
-                  run "git checkout master"
-              else
-                run "git checkout master"
+              run "git add #{outputFile}", ->
+                run 'git commit -m "Updating generated content"', ->
+                  if push
+                    run "git push -f #{remote} gh-pages", ->
+                      run 'git checkout master'
+                  else
+                    run 'git checkout master'
 
-    if branch == 'master'
-      updateMaster()
-    else
-      updateBranch()
+      if branch == 'master'
+        updateMaster()
+      else
+        updateGhPages()
