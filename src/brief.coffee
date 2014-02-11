@@ -58,13 +58,13 @@ runSafe = (cmd, cb = ->) ->
     console.log stdout if stdout
     console.error stderr if stderr
 
-    throw err if err?
+    process.exit 1 if err?
     cb null
 
 # ...technically also safe-ish
 runQuiet = (cmd, cb = ->) ->
   exec cmd, (err) ->
-    throw err if err?
+    process.exit 1 if err?
     cb null
 
 module.exports =
