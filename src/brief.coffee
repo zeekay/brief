@@ -27,11 +27,13 @@ findFiles = (template) ->
   matches
 
 # compile jade template with appropriate context
-compile = (template, ctx, cb) ->
+compile = (template, ctx, quiet, cb) ->
   for filename in findFiles template
     replace = Math.random().toString().replace '0.', '_'
     pattern = new RegExp "read\\(['\"]#{filename}['\"]\\)"
     content = fs.readFileSync filename, 'utf8'
+
+    console.log "- using #{filename} as content" unless quiet
 
     if /\.md$|\.markdown/.test filename
       try
@@ -82,7 +84,7 @@ module.exports =
         console.log "- using #{templateFile} as template" unless quiet
 
         template = fs.readFileSync templateFile, 'utf8'
-        compile template, ctx, (err, output) ->
+        compile template, ctx, quiet, (err, output) ->
 
           console.log "- writing #{outputFile}" unless quiet
           fs.writeFileSync outputFile, output, 'utf8'
@@ -100,7 +102,7 @@ module.exports =
         template = fs.readFileSync templateFile, 'utf8'
 
         run 'git checkout master', ->
-          compile template, ctx, (err, output) ->
+          compile template, ctx, quiet, (err, output) ->
 
             run 'git checkout gh-pages', ->
               console.log "- writing #{outputFile}" unless quiet
