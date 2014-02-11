@@ -29,10 +29,10 @@ templates.</p>
 <h2 id="usage">Usage</h2>
 <ul>
 <li>Create a gh-pages branch.</li>
-<li><p>Add an index.jade file which will render your content (README.md in master branch by default):</p>
-<pre><code><span class="hljs-attribute">  p!</span>=<span class="hljs-string"> content</span>
+<li><p>Add an index.jade file which will render your content. Use <code>read()</code> to specify which file to use as content for your template:</p>
+<pre><code>  p!= <span class="hljs-built_in">read</span>(<span class="hljs-string">'README.md'</span>)
 </code></pre></li>
-<li><p>Make sure you have a README.md file which will be injected into your jade template and rendered as index.html</p>
+<li><p>Make sure you have a README.md file which will be injected into your jade template.</p>
 </li>
 <li><p>If you use <code>cake</code> add a new task to your <code>Cakefile</code>:</p>
 <pre><code>  task <span class="hljs-string">'gh-pages'</span>, <span class="hljs-string">'Publish docs to gh-pages'</span>,<span class="hljs-function"> -&gt;</span>
