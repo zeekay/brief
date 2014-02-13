@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "executive": "~0.4.4",
-    "highlight.js": "~8.0.0",
+    "brief-highlight.js": "~8.0.0",
     "jade": "~1.1.5",
     "marked": "~0.3.1"
   },
