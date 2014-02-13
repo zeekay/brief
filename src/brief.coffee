@@ -4,18 +4,23 @@ hljs   = require 'highlight.js'
 jade   = require 'jade'
 marked = require 'marked'
 
-marked.setOptions
-  gfm: true
-  tables: true
-  smartLists: true
-  highlight: (code, lang) ->
-    if lang
-      try
-        hljs.highlight(lang, code).value
-      catch err
-        throw new Error "Unable to highlight #{lang}"
-    else
-      hljs.highlightAuto(code).value
+
+# convert markdown to html
+markdown = (content) ->
+  marked.setOptions
+    gfm: true
+    tables: true
+    smartLists: true
+    highlight: (code, lang) ->
+      if lang
+        try
+          hljs.highlight(lang, code).value
+        catch err
+          throw new Error "Unable to highlight #{lang}"
+      else
+        hljs.highlightAuto(code).value
+    marked content
+
 
 # find all content
 findFiles = (template) ->
@@ -26,7 +31,8 @@ findFiles = (template) ->
     matches.push match[1]
   matches
 
-# compile jade template with appropriate context
+
+# compile template with appropriate context
 compile = (template, ctx, quiet, cb) ->
   for filename in findFiles template
     replace = Math.random().toString().replace '0.', '_'
@@ -37,7 +43,7 @@ compile = (template, ctx, quiet, cb) ->
 
     if /\.md$|\.markdown/.test filename
       try
-        content = marked content
+        content = markdown content
       catch err
         console.error err
         throw err
@@ -46,6 +52,7 @@ compile = (template, ctx, quiet, cb) ->
     template = template.replace pattern, replace
 
   cb null, (jade.compile template, pretty: true) ctx
+
 
 module.exports =
   update: (options = {}) ->
