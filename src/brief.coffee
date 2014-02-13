@@ -131,7 +131,9 @@ class Brief
             @run "git add #{@outputFile}", =>
               @run 'git commit -m "Updating generated content"', =>
                 @run 'git checkout master', =>
-                  @run "git push -f #{@remote} gh-pages" if @push
+                  if @push
+                    @run "git push -f #{@remote} gh-pages", ->
+                      process.exit 0
 
 
 # instantiate default brief instance and export that
