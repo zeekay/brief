@@ -14,25 +14,21 @@ class Brief
     @remote       = options.remote   ? 'origin'
     @push         = options.push     ? true
     @quiet        = options.quiet    ? false
-    @markdedOpts  = options.marked   ?
-      gfm:        true
-      tables:     true
-      smartLists: true
-      highlight:  @highlight
-
-  # use hljs for highlighting
-  highlight: (code, lang) ->
-    if lang
-      try
-        hljs.highlight(lang, code).value
-      catch err
-        throw new Error "Unable to highlight #{lang}"
-    else
-      hljs.highlightAuto(code).value
 
   # convert markdown to html
   markdown: (content) ->
-    marked.setOptions @markdedOpts
+    marked.setOptions
+      gfm:        true
+      tables:     true
+      smartLists: true
+      highlight:  (code, lang) ->
+        if lang
+          try
+            hljs.highlight(lang, code).value
+          catch err
+            throw new Error "Unable to highlight #{lang}"
+        else
+          hljs.highlightAuto(code).value
     marked content
 
   # find all content
