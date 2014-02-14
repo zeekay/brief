@@ -42,10 +42,9 @@ module.exports = (options = {}) ->
 
       while files.length > 0
         fs.unlink files.pop(), (err) ->
-          done++
           throw err if err?
 
-          if done == todo
-    run 'rm .git/index', ->
-      run "git pull https://github.com/#{template}", ->
-        run "#{branch} initialized, #{content} configured as content for template"
+          if done++ == todo
+            run 'rm .git/index', ->
+              run "git pull https://github.com/#{template}", ->
+                run "#{branch} initialized, #{content} configured as content for template"
