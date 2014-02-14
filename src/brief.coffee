@@ -119,8 +119,6 @@ class Brief
   updateGhPages: ->
     @run 'git checkout gh-pages', =>
       @log "using #{@templateFile} as template"
-      console.log @templateFile
-      console.log process.cwd()
       template = fs.readFileSync @templateFile, 'utf8'
 
       @run 'git checkout master', =>
