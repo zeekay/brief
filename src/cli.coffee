@@ -1,7 +1,7 @@
 program = require 'jade/node_modules/commander'
 
 program
-  .version(require('./package').version)
+  .version(require('../package').version)
 
 program
   .command('init')
