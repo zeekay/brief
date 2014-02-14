@@ -67,7 +67,7 @@ class Brief
     console.log "- #{message}" unless @quiet
 
   # run command and exit if anything bad happens
-  run: (cmd, cb) ->
+  run: (cmd, cb = ->) ->
     console.log "> #{cmd}" unless @quiet
 
     exec cmd, (err, stdout, stderr) ->
@@ -82,10 +82,7 @@ class Brief
         return exec 'git checkout master', ->
           process.exit 1
 
-      if cb?
-        cb null
-      else
-        process.exit 0
+      cb null
 
   # perform gh-pages update.
   update: (options = {}) ->
