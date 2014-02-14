@@ -27,7 +27,9 @@ module.exports = (options = {}) ->
   template = options.template ? 'zeekay/brief-minimal'
 
   run "git symbolic-ref HEAD refs/heads/#{branch}", ->
+    console.log 'hi'
     exec "git status", (err, out) ->
+      console.log 'hi'
       newFileRe = /new file:/
       files = []
 
@@ -36,6 +38,8 @@ module.exports = (options = {}) ->
           [_, filename] = line.split ':'
           filename = filename.trim()
           files.push filename
+
+      console.log files
 
       done = 0
       todo = files.length
