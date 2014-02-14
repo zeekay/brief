@@ -136,7 +136,4 @@ class Brief
                   @run "git push -f #{@remote} gh-pages" if @push
 
 
-# instantiate default brief instance and export that
-brief = new Brief()
-brief.Brief = Brief
-module.exports = brief
+module.exports = Brief
