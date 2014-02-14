@@ -1,4 +1,4 @@
-exec = require 'executive'
+exec = require('executive').quiet
 fs   = require 'fs'
 
 log = (message) ->
@@ -45,6 +45,7 @@ module.exports = (options = {}) ->
           throw err if err?
 
           if done++ == todo
-            run 'rm .git/index', ->
-              run "git pull https://github.com/#{template}", ->
-                run "#{branch} initialized, #{content} configured as content for template"
+            exec 'rm -rf *', ->
+              run 'rm .git/index', ->
+                run "git pull https://github.com/#{template}", ->
+                  run "#{branch} initialized, #{content} configured as content for template"
