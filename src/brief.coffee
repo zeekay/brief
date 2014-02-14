@@ -82,10 +82,10 @@ class Brief
         return exec 'git checkout master', ->
           process.exit 1
 
-    if cb?
-      cb null
-    else
-      process.exit 0
+      if cb?
+        cb null
+      else
+        process.exit 0
 
   # perform gh-pages update.
   update: (options = {}) ->
