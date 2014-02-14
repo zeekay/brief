@@ -8,7 +8,7 @@ log = (message) ->
 run = (cmd, cb = ->) ->
   console.log "> #{cmd}"
 
-  exec cmd, (err, stdout, stderr) ->
+  exec cmd, (err, stdout = '', stderr = '') ->
     stderr = stderr.trim()
     stdout = stdout.trim()
 
@@ -27,9 +27,7 @@ module.exports = (options = {}) ->
   template = options.template ? 'zeekay/brief-minimal'
 
   run "git symbolic-ref HEAD refs/heads/#{branch}", ->
-    console.log 'hi'
     exec "git status", (err, out) ->
-      console.log 'hi'
       newFileRe = /new file:/
       files = []
 
