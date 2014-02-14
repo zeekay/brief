@@ -11,12 +11,26 @@ p!= read('README.md')
 ```
 
 - Make sure you have a README.md file which will be injected into your jade template.
-- If you use `cake` add a new task to your `Cakefile`:
+- Run `brief` from cli or instantiate a brief instance and run `brief.update()`
 
-```coffeescript
-task 'gh-pages', 'Publish docs to gh-pages', ->
-  brief = require 'brief'
-  brief.update()
+## API
+If you want to customize behavior of brief you can instantiate a new brief
+instance with various options:
+
+```javascript
+var Brief = require('brief').Brief;
+
+var brief = new Brief({
+    templateFile: 'index.jade',
+    outputFile:   'index.html',
+    ctx:          {title: 'Title'},
+    branch:       'gh-pages',
+    remote:       'origin',
+    push:         true,
+    quiet:        false
+});
+
+brief.update();
 ```
 
 ## CLI
@@ -42,3 +56,13 @@ Your branch is up-to-date with 'origin/master'.
 
 Most configuration options are available from command line, `brief --help` for
 more detail.
+
+## Advanced
+Tastes good with Cake!
+
+```coffeescript
+task 'gh-pages', 'Publish docs to gh-pages', ->
+  brief = require 'brief'
+  brief.update()
+```
+
