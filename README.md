@@ -65,4 +65,3 @@ task 'gh-pages', 'Publish docs to gh-pages', ->
   brief = require 'brief'
   brief.update()
 ```
-
