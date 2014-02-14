@@ -62,6 +62,5 @@ Tastes good with Cake!
 
 ```coffeescript
 task 'gh-pages', 'Publish docs to gh-pages', ->
-  brief = require 'brief'
-  brief.update()
+  require('brief').update()
 ```
