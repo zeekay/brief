@@ -51,4 +51,5 @@ module.exports = (options = {}) ->
 
           if done == todo
             run "git pull https://github.com/#{template}", ->
-              log "#{branch} initialized, #{content} configured as content for template"
+              run "git checkout master", ->
+                log "#{branch} initialized, #{content} configured as content for template"
