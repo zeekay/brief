@@ -29,7 +29,7 @@ module.exports = (options = {}) ->
   run "git symbolic-ref HEAD refs/heads/#{branch}", ->
     exec "git status", (err, out) ->
       newFileRe = /new file:/
-      files = []
+      files = ['.git/index']
 
       for line in out.split '\n'
         if newFileRe.test line
@@ -37,20 +37,18 @@ module.exports = (options = {}) ->
           filename = filename.trim()
           files.push filename
 
-      console.log files
-
       done = 0
       todo = files.length
 
       while files.length > 0
         filename = files.pop()
         log "rm #{filename}"
+
         fs.unlink filename, (err) ->
           throw err if err?
 
           done++
 
           if done == todo
-            run 'rm .git/index', ->
-              run "git pull https://github.com/#{template}", ->
-                run "#{branch} initialized, #{content} configured as content for template"
+            run "git pull https://github.com/#{template}", ->
+              log "#{branch} initialized, #{content} configured as content for template"
