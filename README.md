@@ -7,7 +7,7 @@ templates.
 - Add an index.jade file which will render your content. Use `read()` to specify which file to use as content for your template:
 
 ```jade
-p!= read('README.md')
+p!= read("README.md")
 ```
 
 - Make sure you have a README.md file which will be injected into your jade template.
