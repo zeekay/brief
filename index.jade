@@ -8,6 +8,7 @@ html(lang='en')
     link(rel='stylesheet', href='stylesheets/highlight.css')
     meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no')
     //if lt IE 9
+
   body
     .wrapper
       header
@@ -30,8 +31,11 @@ html(lang='en')
             a(href='https://github.com/zeekay/brief')
               | View On
               strong GitHub
+
       section
         p!= read('README.md')
+
       footer
+
     script(src='javascripts/scale.fix.js')
-  script(src='//html5shiv.googlecode.com/svn/trunk/html5.js')
+    script(src='//html5shiv.googlecode.com/svn/trunk/html5.js')
