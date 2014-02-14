@@ -67,7 +67,7 @@ class Brief
     console.log "- #{message}" unless @quiet
 
   # run command and exit if anything bad happens
-  run: (cmd, cb = ->) ->
+  run: (cmd, cb) ->
     console.log "> #{cmd}" unless @quiet
 
     exec cmd, (err, stdout, stderr) ->
@@ -79,10 +79,13 @@ class Brief
         console.error stderr if stderr
 
       if err?
-        exec 'git checkout master', ->
+        return exec 'git checkout master', ->
           process.exit 1
-      else
-        cb null
+
+    if cb?
+      cb null
+    else
+      process.exit 0
 
   # perform gh-pages update.
   update: (options = {}) ->
@@ -131,9 +134,7 @@ class Brief
             @run "git add #{@outputFile}", =>
               @run 'git commit -m "Updating generated content"', =>
                 @run 'git checkout master', =>
-                  if @push
-                    @run "git push -f #{@remote} gh-pages", ->
-                      process.exit 0
+                  @run "git push -f #{@remote} gh-pages" if @push
 
 
 # instantiate default brief instance and export that
