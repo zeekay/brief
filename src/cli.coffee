@@ -23,5 +23,5 @@ help = ->
 program.parse process.argv
 
 unless program.args.length
-  process.argv.splice 2, 0, 'init'
+  process.argv.splice 2, 0, 'publish'
   program.parse process.argv
