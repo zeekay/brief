@@ -1,0 +1,50 @@
+{
+  "name": "brief",
+  "version": "1.1.0",
+  "description": "Generate and publish Github pages quickly and easily.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/zeekay/brief.git"
+  },
+  "keywords": [
+    "git",
+    "github",
+    "github pages",
+    "markdown",
+    "jade",
+    "documentation",
+    "docs"
+  ],
+  "main": "lib/",
+  "bin": {
+    "brief": "./bin/brief"
+  },
+  "scripts": {
+    "prepublish": "cake build",
+    "test": "cake test"
+  },
+  "dependencies": {
+    "executive": "~0.4.4",
+    "brief-highlight.js": "~8.0.0",
+    "jade": "~1.1.5",
+    "marked": "~0.3.1"
+  },
+  "author": {
+    "name": "Zach Kelling",
+    "email": "zk@monoid.io",
+    "url": "http://zeekay.io"
+  },
+  "homepage": "http://zeekay.github.io/brief",
+  "bugs": {
+    "url": "http://github.com/zeekay/brief/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/zeekay/brief/blob/master/LICENSE"
+    }
+  ],
+  "devDependencies": {
+    "coffee-script": "~1.7.1"
+  }
+}
