@@ -24,10 +24,10 @@
     "test": "cake test"
   },
   "dependencies": {
-    "executive": "~0.4.4",
-    "brief-highlight.js": "~8.0.0",
-    "jade": "~1.1.5",
-    "marked": "~0.3.1"
+    "brief-highlight.js": "^8.0.0",
+    "executive": "^0.4.7",
+    "jade": "^1.1.5",
+    "marked": "^0.3.3"
   },
   "author": {
     "name": "Zach Kelling",
@@ -45,6 +45,6 @@
     }
   ],
   "devDependencies": {
-    "coffee-script": "~1.7.1"
+    "coffee-script": "~1.9.1"
   }
 }
