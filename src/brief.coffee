@@ -1,6 +1,6 @@
 exec   = (require 'executive').quiet
 fs     = require 'fs'
-hljs   = require 'highlight.js'
+hljs   = require 'brief-highlight.js'
 jade   = require 'jade'
 marked = require 'marked'
 
