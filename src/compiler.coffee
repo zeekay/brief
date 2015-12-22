@@ -9,7 +9,7 @@ compilers =
     jade.compile template, pretty: true
 
   markdown: (content) ->
-    hljs   = require 'highlight.js'
+    hljs   = require 'brief-highlight.js'
     marked = require 'marked'
 
     marked.setOptions
