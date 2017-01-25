@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "brief-highlight.js": "^8.0.0",
-    "executive": "^0.4.7",
+    "executive": "^1.1.8",
     "jade": "^1.1.5",
     "marked": "^0.3.3"
   },
@@ -45,6 +45,6 @@
     }
   ],
   "devDependencies": {
-    "coffee-script": "~1.9.1"
+    "coffee-script": "~1.12.3"
   }
 }
