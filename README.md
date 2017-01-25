@@ -1,4 +1,6 @@
 # brief
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/zeekay/brief.svg)](https://greenkeeper.io/)
 Generate and publish Github pages quickly and easily from markdown/jade
 templates.
 
