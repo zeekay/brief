@@ -1,14 +1,10 @@
+use 'sake-outdated'
+use 'sake-publish'
+use 'sake-version'
+
 task 'build', 'Build project', ->
-  exec './node_modules/.bin/coffee -bcm -o lib/ src/'
+  exec 'coffee -bcm -o lib/ src/'
 
 task 'gh-pages', 'Generate gh-pages', ->
   brief = require './'
   brief.update()
-
-task 'publish', 'Publish project', ->
-  exec ['git push', 'npm publish'], (err) ->
-    return if err?
-
-    console.log()
-
-    invoke 'gh-pages'
