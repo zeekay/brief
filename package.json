@@ -20,31 +20,27 @@
     "brief": "./bin/brief"
   },
   "scripts": {
-    "prepublish": "cake build",
-    "test": "cake test"
+    "build": "sake build",
+    "prepublishOnly": "sake build",
+    "pretest": "sake build",
+    "test": "sake test"
   },
-  "dependencies": {
-    "brief-highlight.js": "^8.0.0",
-    "executive": "^0.4.7",
-    "jade": "^1.1.5",
-    "marked": "^0.3.3"
-  },
-  "author": {
-    "name": "Zach Kelling",
-    "email": "zk@monoid.io",
-    "url": "http://zeekay.io"
-  },
+  "author": "Zach Kelling <z@zeekay.io>",
   "homepage": "http://zeekay.github.io/brief",
   "bugs": {
     "url": "http://github.com/zeekay/brief/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/zeekay/brief/blob/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
+  "dependencies": {
+    "brief-highlight.js": "^8.0.0",
+    "jade": "^1.1.5",
+    "marked": "^0.3.3"
+  },
   "devDependencies": {
-    "coffee-script": "~1.9.1"
+    "coffee-script": "~1.9.1",
+    "sake-cli": "0.5.5",
+    "sake-outdated": "0.1.22",
+    "sake-publish": "0.1.12",
+    "sake-version": "0.1.19"
   }
 }
