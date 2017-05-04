@@ -38,7 +38,7 @@
     "marked": "^0.3.3"
   },
   "devDependencies": {
-    "coffee-script": "~1.9.1",
+    "coffee-script": "~1.12.5",
     "sake-cli": "0.5.5",
     "sake-outdated": "0.1.22",
     "sake-publish": "0.1.12",
