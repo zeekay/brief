@@ -5,7 +5,6 @@ path = require 'path'
 compilers =
   pug: (template) ->
     pug = require 'pug'
-
     pug.compile template, pretty: true
 
   markdown: (content) ->
@@ -40,7 +39,7 @@ compile = (templateFile, ctx, cb) ->
       ctx[replace] = content
       template = template.replace pattern, replace
 
-    cb null, (jade.compile template, pretty: true) ctx
+    cb null, (compilers.pug template) ctx
 
 
 module.exports =
