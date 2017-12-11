@@ -1,9 +1,19 @@
+use 'sake-bundle'
 use 'sake-outdated'
 use 'sake-publish'
 use 'sake-version'
 
 task 'build', 'Build project', ->
-  exec 'coffee -bcm -o lib/ src/'
+  b = new Bundle()
+
+  yield b.write
+    entry:   'src/index.coffee'
+    formats: ['cjs', 'es']
+
+  yield b.write
+    entry:  'src/cli.coffee'
+    format: 'cli'
+    executable: true
 
 task 'gh-pages', 'Generate gh-pages', ->
   brief = require './'
