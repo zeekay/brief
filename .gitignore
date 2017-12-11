@@ -4,3 +4,4 @@ lib/
 .sake
 npm-debug.log
 *.map
+bin/brief
