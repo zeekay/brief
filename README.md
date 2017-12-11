@@ -1,16 +1,16 @@
 # brief
-Generate and publish Github pages quickly and easily from markdown/jade
+Generate and publish Github pages quickly and easily from markdown/pug
 templates.
 
 ## Usage
 - Create a gh-pages branch.
-- Add an index.jade file which will render your content. Use `read()` to specify which file to use as content for your template:
+- Add an index.pug file which will render your content. Use `read()` to specify which file to use as content for your template:
 
-```jade
+```pug
 p!= read("README.md")
 ```
 
-- Make sure you have a README.md file which will be injected into your jade template.
+- Make sure you have a README.md file which will be injected into your pug template.
 - Run `brief` from cli or instantiate a brief instance and run `brief.update()`
 
 ## API
@@ -21,7 +21,7 @@ instance with various options:
 var Brief = require('brief').Brief;
 
 var brief = new Brief({
-    templateFile: 'index.jade',
+    templateFile: 'index.pug',
     outputFile:   'index.html',
     ctx:          {title: 'Title'},
     branch:       'gh-pages',
