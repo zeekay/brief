@@ -1,20 +1,21 @@
-program = require 'commander'
+import program   from 'commander'
 
-program
-  .version(require('../package').version)
+import init      from './init'
+import brief     from './'
+import {version} from '../package.json'
+
+program.version(version)
 
 program
   .command('init')
   .option('-t, --template <repo>', 'template repo to use')
-  .action (opts) ->
-    (require './init') opts
+  .action init
 
 program
   .command('publish')
   .option('-o, --output <file>', 'where to output rendered content')
   .option('-t, --template <file>', 'pug template to use')
-  .action (opts) ->
-    (require './index').update opts
+  .action (opts) -> brief.update opts
 
 help = ->
   console.log program.helpInformation()

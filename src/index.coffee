@@ -1,8 +1,13 @@
-Brief = require './brief'
-init  = require './init'
+import Brief from './brief'
+import init  from './init'
 
 brief       = new Brief()
 brief.Brief = Brief
 brief.init  = init
 
-module.exports = brief
+
+export {
+  Brief, init
+}
+
+export default brief

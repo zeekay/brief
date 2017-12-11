@@ -70,7 +70,7 @@ class Brief
   run: (cmd, cb = ->) ->
     console.log "> #{cmd}" unless @quiet
 
-    exec cmd, (err, stdout, stderr) ->
+    exec cmd, (err, stdout, stderr) =>
       unless @quiet
         stderr = stderr.trim()
         stdout = stdout.trim()
@@ -134,4 +134,4 @@ class Brief
                   @run "git push -f #{@remote} gh-pages" if @push
 
 
-module.exports = Brief
+export default Brief
