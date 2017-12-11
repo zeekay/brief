@@ -1,13 +1,13 @@
 exec   = (require 'executive').quiet
 fs     = require 'fs'
 hljs   = require 'brief-highlight.js'
-jade   = require 'jade'
+pug    = require 'pug'
 marked = require 'marked'
 
 
 class Brief
   constructor: (options = {}) ->
-    @templateFile = options.template ? 'index.jade'
+    @templateFile = options.template ? 'index.pug'
     @outputFile   = options.output   ? 'index.html'
     @ctx          = options.ctx      ? {}
     @branch       = options.branch   ? 'gh-pages'
@@ -61,7 +61,7 @@ class Brief
       ctx[replace] = content
       template = template.replace pattern, replace
 
-    cb null, (jade.compile template, pretty: true) ctx
+    cb null, (pug.compile template, pretty: true) ctx
 
   log: (message) ->
     console.log "- #{message}" unless @quiet

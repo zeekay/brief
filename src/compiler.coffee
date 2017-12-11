@@ -3,10 +3,10 @@ path = require 'path'
 
 
 compilers =
-  jade: (template) ->
-    jade = require 'jade'
+  pug: (template) ->
+    pug = require 'pug'
 
-    jade.compile template, pretty: true
+    pug.compile template, pretty: true
 
   markdown: (content) ->
     hljs   = require 'brief-highlight.js'
@@ -45,4 +45,4 @@ compile = (templateFile, ctx, cb) ->
 
 module.exports =
   markdown: markdown
-  compile: compile
+  compile:  compile
