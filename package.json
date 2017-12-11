@@ -33,15 +33,15 @@
   "license": "MIT",
   "dependencies": {
     "brief-highlight.js": "^8.0.0",
-    "executive": "1.5.4",
-    "jade": "^1.1.5",
-    "marked": "^0.3.3"
+    "executive": "1.5.12",
+    "jade": "^1.11.0",
+    "marked": "^0.3.7"
   },
   "devDependencies": {
-    "coffee-script": "~1.12.5",
-    "sake-cli": "0.5.5",
-    "sake-outdated": "0.1.22",
-    "sake-publish": "0.1.12",
+    "coffeescript": "~1.12.7",
+    "sake-cli": "0.5.22",
+    "sake-outdated": "^0.1.28",
+    "sake-publish": "0.1.16",
     "sake-version": "0.1.19"
   }
 }
