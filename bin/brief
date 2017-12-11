@@ -1,2 +1,25 @@
 #!/usr/bin/env node
-require('../lib/cli')
+'use strict';
+
+// src/cli.coffee
+var program;
+
+program = require('commander');
+
+program.version(require('../package').version);
+
+program.command('init').option('-t, --template <repo>', 'template repo to use').action(function(opts) {
+  return (require('./init'))(opts);
+});
+
+program.command('publish').option('-o, --output <file>', 'where to output rendered content').option('-t, --template <file>', 'pug template to use').action(function(opts) {
+  return (require('./index')).update(opts);
+});
+
+program.parse(process.argv);
+
+if (!program.args.length) {
+  process.argv.splice(2, 0, 'publish');
+  program.parse(process.argv);
+}
+//# sourceMappingURL=brief.map
