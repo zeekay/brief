@@ -1,4 +1,4 @@
-program = require 'jade/node_modules/commander'
+program = require 'commander'
 
 program
   .version(require('../package').version)
@@ -12,7 +12,7 @@ program
 program
   .command('publish')
   .option('-o, --output <file>', 'where to output rendered content')
-  .option('-t, --template <file>', 'jade template to use')
+  .option('-t, --template <file>', 'pug template to use')
   .action (opts) ->
     (require './index').update opts
 
