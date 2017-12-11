@@ -21,7 +21,7 @@ run = (cmd, cb = ->) ->
 
     cb null
 
-module.exports = (options = {}) ->
+export default (options = {}) ->
   branch   = options.branch   ? 'gh-pages'
   content  = options.content  ? 'README.md'
   template = options.template ? 'zeekay/brief-minimal'

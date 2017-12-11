@@ -1,19 +1,315 @@
 #!/usr/bin/env node
 'use strict';
 
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var program = _interopDefault(require('commander'));
+
+// src/init.coffee
+var exec;
+var fs;
+var log;
+var run;
+
+exec = require('executive').quiet;
+
+fs = require('fs');
+
+log = function(message) {
+  return console.log(`- ${message}`);
+};
+
+// run command and exit if anything bad happens
+run = function(cmd, cb = function() {}) {
+  console.log(`> ${cmd}`);
+  return exec(cmd, function(err, stdout = '', stderr = '') {
+    stderr = stderr.trim();
+    stdout = stdout.trim();
+    if (stdout) {
+      console.log(stdout);
+    }
+    if (stderr) {
+      console.error(stderr);
+    }
+    if (err != null) {
+      return exec('git checkout master', function() {
+        return process.exit(1);
+      });
+    }
+    return cb(null);
+  });
+};
+
+var init = function(options = {}) {
+  var branch, content, ref, ref1, ref2, template;
+  branch = (ref = options.branch) != null ? ref : 'gh-pages';
+  content = (ref1 = options.content) != null ? ref1 : 'README.md';
+  template = (ref2 = options.template) != null ? ref2 : 'zeekay/brief-minimal';
+  return run(`git symbolic-ref HEAD refs/heads/${branch}`, function() {
+    return exec("git status", function(err, out) {
+      var _, done, filename, files, i, len, line, newFileRe, ref3, results, todo;
+      newFileRe = /new file:/;
+      files = ['.git/index'];
+      ref3 = out.split('\n');
+      for (i = 0, len = ref3.length; i < len; i++) {
+        line = ref3[i];
+        if (newFileRe.test(line)) {
+          [_, filename] = line.split(':');
+          filename = filename.trim();
+          files.push(filename);
+        }
+      }
+      done = 0;
+      todo = files.length;
+      results = [];
+      while (files.length > 0) {
+        filename = files.pop();
+        log(`rm ${filename}`);
+        results.push(fs.unlink(filename, function(err) {
+          if (err != null) {
+            throw err;
+          }
+          done++;
+          if (done === todo) {
+            return run(`git pull https://github.com/${template}`, function() {
+              return run("git checkout master", function() {
+                return log(`${branch} initialized, ${content} configured as content for template`);
+              });
+            });
+          }
+        }));
+      }
+      return results;
+    });
+  });
+};
+
+// src/brief.coffee
+var Brief;
+var exec$1;
+var fs$1;
+var hljs;
+var marked;
+var pug;
+
+exec$1 = (require('executive')).quiet;
+
+fs$1 = require('fs');
+
+hljs = require('brief-highlight.js');
+
+pug = require('pug');
+
+marked = require('marked');
+
+Brief = class Brief {
+  constructor(options = {}) {
+    var ref, ref1, ref2, ref3, ref4, ref5, ref6;
+    this.templateFile = (ref = options.template) != null ? ref : 'index.pug';
+    this.outputFile = (ref1 = options.output) != null ? ref1 : 'index.html';
+    this.ctx = (ref2 = options.ctx) != null ? ref2 : {};
+    this.branch = (ref3 = options.branch) != null ? ref3 : 'gh-pages';
+    this.remote = (ref4 = options.remote) != null ? ref4 : 'origin';
+    this.push = (ref5 = options.push) != null ? ref5 : true;
+    this.quiet = (ref6 = options.quiet) != null ? ref6 : false;
+  }
+
+  // convert markdown to html
+  markdown(content) {
+    marked.setOptions({
+      gfm: true,
+      tables: true,
+      smartLists: true,
+      highlight: function(code, lang) {
+        if (lang) {
+          try {
+            return hljs.highlight(lang, code).value;
+          } catch (error) {
+            throw new Error(`Unable to highlight ${lang}`);
+          }
+        } else {
+          return hljs.highlightAuto(code).value;
+        }
+      }
+    });
+    return marked(content);
+  }
+
+  // find all content
+  findFiles(template) {
+    var match, matches, readRe;
+    readRe = /read\([']([^']+)[']\)|read\(["]([^"]+)["]\)/g;
+    matches = [];
+    while ((match = readRe.exec(template)) != null) {
+      matches.push(match[1]);
+    }
+    return matches;
+  }
+
+  // compile template with appropriate context
+  compile(template, cb) {
+    var content, ctx, err, filename, i, len, pattern, ref, replace;
+    ctx = JSON.parse(JSON.stringify(this.ctx));
+    ref = this.findFiles(template);
+    for (i = 0, len = ref.length; i < len; i++) {
+      filename = ref[i];
+      replace = Math.random().toString().replace('0.', '_');
+      pattern = new RegExp(`read\\(['"]${filename}['"]\\)`);
+      content = fs$1.readFileSync(filename, 'utf8');
+      this.log(`using ${filename} as content`);
+      if (/\.md$|\.markdown/.test(filename)) {
+        try {
+          content = this.markdown(content);
+        } catch (error) {
+          err = error;
+          console.error(err);
+          throw err;
+        }
+      }
+      ctx[replace] = content;
+      template = template.replace(pattern, replace);
+    }
+    return cb(null, (pug.compile(template, {
+      pretty: true
+    }))(ctx));
+  }
+
+  log(message) {
+    if (!this.quiet) {
+      return console.log(`- ${message}`);
+    }
+  }
+
+  // run command and exit if anything bad happens
+  run(cmd, cb = function() {}) {
+    if (!this.quiet) {
+      console.log(`> ${cmd}`);
+    }
+    return exec$1(cmd, (err, stdout, stderr) => {
+      if (!this.quiet) {
+        stderr = stderr.trim();
+        stdout = stdout.trim();
+        if (stdout) {
+          console.log(stdout);
+        }
+        if (stderr) {
+          console.error(stderr);
+        }
+      }
+      if (err != null) {
+        return exec$1('git checkout master', function() {
+          return process.exit(1);
+        });
+      }
+      return cb(null);
+    });
+  }
+
+  // perform gh-pages update.
+  update(options = {}) {
+    if (this.templateFile == null) {
+      this.templateFile = options.template;
+    }
+    if (this.outputFile == null) {
+      this.outputFile = options.output;
+    }
+    if (this.ctx == null) {
+      this.ctx = options.ctx;
+    }
+    if (this.branch == null) {
+      this.branch = options.branch;
+    }
+    if (this.remote == null) {
+      this.remote = options.remote;
+    }
+    if (this.push == null) {
+      this.push = options.push;
+    }
+    if (this.quiet == null) {
+      this.quiet = options.quiet;
+    }
+    if (this.markdedOpts == null) {
+      this.markdedOpts = options.marked;
+    }
+    if (this.branch === 'master') {
+      return this.updateMaster();
+    } else {
+      return this.updateGhPages();
+    }
+  }
+
+  // update github page in master branch
+  updateMaster() {
+    return this.run('git checkout master', () => {
+      var template;
+      this.log(`using ${this.templateFile} as template`);
+      template = fs$1.readFileSync(this.templateFile, 'utf8');
+      return this.compile(template, (err, output) => {
+        this.log(`writing ${this.outputFile}`);
+        fs$1.writeFileSync(this.outputFile, output, 'utf8');
+        return this.run(`git add ${this.outputFile}`, () => {
+          return this.run('git commit --amend -C HEAD', () => {
+            if (this.push) {
+              return this.run(`git push -f ${this.remote} master`);
+            }
+          });
+        });
+      });
+    });
+  }
+
+  // upate github page in gh-pages branch
+  updateGhPages() {
+    return this.run('git checkout gh-pages', () => {
+      var template;
+      this.log(`using ${this.templateFile} as template`);
+      template = fs$1.readFileSync(this.templateFile, 'utf8');
+      return this.run('git checkout master', () => {
+        return this.compile(template, (err, output) => {
+          return this.run('git checkout gh-pages', () => {
+            this.log(`writing ${this.outputFile}`);
+            fs$1.writeFileSync(this.outputFile, output, 'utf8');
+            return this.run(`git add ${this.outputFile}`, () => {
+              return this.run('git commit -m "Updating generated content"', () => {
+                return this.run('git checkout master', () => {
+                  if (this.push) {
+                    return this.run(`git push -f ${this.remote} gh-pages`);
+                  }
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  }
+
+};
+
+var Brief$1 = Brief;
+
+// src/index.coffee
+var brief;
+
+brief = new Brief$1();
+
+brief.Brief = Brief$1;
+
+brief.init = init;
+
+var brief$1 = brief;
+
+// package.json
+
+var version = "1.1.2";
+
 // src/cli.coffee
-var program;
+program.version(version);
 
-program = require('commander');
-
-program.version(require('../package').version);
-
-program.command('init').option('-t, --template <repo>', 'template repo to use').action(function(opts) {
-  return (require('./init'))(opts);
-});
+program.command('init').option('-t, --template <repo>', 'template repo to use').action(init);
 
 program.command('publish').option('-o, --output <file>', 'where to output rendered content').option('-t, --template <file>', 'pug template to use').action(function(opts) {
-  return (require('./index')).update(opts);
+  return brief$1.update(opts);
 });
 
 program.parse(process.argv);
