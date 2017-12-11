@@ -2,3 +2,5 @@ node_modules/
 docs/
 lib/
 npm-debug.log
+.sake
+bin
