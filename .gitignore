@@ -3,3 +3,4 @@ docs/
 lib/
 .sake
 npm-debug.log
+.map

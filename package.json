@@ -14,7 +14,8 @@
     "documentation",
     "docs"
   ],
-  "main": "lib/",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
   "bin": {
     "brief": "./bin/brief"
   },
