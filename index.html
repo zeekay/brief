@@ -23,17 +23,17 @@
       </header>
       <section>
         <p><h1 id="brief">brief</h1>
-<p>Generate and publish Github pages quickly and easily from markdown/jade
+<p>Generate and publish Github pages quickly and easily from markdown/pug
 templates.</p>
 <h2 id="usage">Usage</h2>
 <ul>
 <li>Create a gh-pages branch.</li>
-<li>Add an index.jade file which will render your content. Use <code>read()</code> to specify which file to use as content for your template:</li>
+<li>Add an index.pug file which will render your content. Use <code>read()</code> to specify which file to use as content for your template:</li>
 </ul>
-<pre><code class="lang-jade"><span class="hljs-attribute keyword">p!= </span>read("README.md")
+<pre><code class="lang-pug"><span class="hljs-attribute keyword">p!= </span>read("README.md")
 </code></pre>
 <ul>
-<li>Make sure you have a README.md file which will be injected into your jade template.</li>
+<li>Make sure you have a README.md file which will be injected into your pug template.</li>
 <li>Run <code>brief</code> from cli or instantiate a brief instance and run <code>brief.update()</code></li>
 </ul>
 <h2 id="api">API</h2>
@@ -42,13 +42,13 @@ instance with various options:</p>
 <pre><code class="lang-javascript"><span class="hljs-keyword">var</span> Brief = <span class="hljs-built_in">require</span>(<span class="hljs-string">'brief'</span>).Brief;
 
 <span class="hljs-keyword">var</span> brief = <span class="hljs-keyword">new</span> Brief({
-    templateFile: <span class="hljs-string">'index.jade'</span>,
-    outputFile:   <span class="hljs-string">'index.html'</span>,
-    ctx:          {title: <span class="hljs-string">'Title'</span>},
-    branch:       <span class="hljs-string">'gh-pages'</span>,
-    remote:       <span class="hljs-string">'origin'</span>,
-    push:         <span class="hljs-literal">true</span>,
-    quiet:        <span class="hljs-literal">false</span>
+    <span class="hljs-attr">templateFile</span>: <span class="hljs-string">'index.pug'</span>,
+    <span class="hljs-attr">outputFile</span>:   <span class="hljs-string">'index.html'</span>,
+    <span class="hljs-attr">ctx</span>:          {<span class="hljs-attr">title</span>: <span class="hljs-string">'Title'</span>},
+    <span class="hljs-attr">branch</span>:       <span class="hljs-string">'gh-pages'</span>,
+    <span class="hljs-attr">remote</span>:       <span class="hljs-string">'origin'</span>,
+    <span class="hljs-attr">push</span>:         <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">quiet</span>:        <span class="hljs-literal">false</span>
 });
 
 brief.update();
@@ -58,15 +58,15 @@ brief.update();
 <pre><code class="lang-bash">$ brief
 &gt; git checkout gh-pages
 Switched to branch <span class="hljs-string">'gh-pages'</span>
-Your branch is ahead of <span class="hljs-string">'origin/gh-pages'</span> by <span class="hljs-number">1</span> commit.
+Your branch is ahead of <span class="hljs-string">'origin/gh-pages'</span> by 1 commit.
 &gt; git add /Users/zk/go/src/github.com/zeekay/brief/index.html
 &gt; git commit -m <span class="hljs-string">"Updating generated content"</span>
 [gh-pages f869f85] Updating generated content
- <span class="hljs-number">1</span> file changed, <span class="hljs-number">29</span> insertions(+), <span class="hljs-number">71</span> deletions(-)
- rewrite index.html (<span class="hljs-number">99</span>%)
-&gt; git push <span class="hljs-operator">-f</span> origin gh-pages
+ 1 file changed, 29 insertions(+), 71 deletions(-)
+ rewrite index.html (99%)
+&gt; git push -f origin gh-pages
 To git@github.com:zeekay/brief
-   <span class="hljs-number">0052836</span>..f869f85  gh-pages -&gt; gh-pages
+   0052836..f869f85  gh-pages -&gt; gh-pages
 &gt; git checkout master
 Switched to branch <span class="hljs-string">'master'</span>
 Your branch is up-to-date with <span class="hljs-string">'origin/master'</span>.
@@ -75,7 +75,7 @@ Your branch is up-to-date with <span class="hljs-string">'origin/master'</span>.
 more detail.</p>
 <h2 id="advanced">Advanced</h2>
 <p>Tastes good with Cake!</p>
-<pre><code class="lang-coffeescript">task <span class="hljs-string">'gh-pages'</span>, <span class="hljs-string">'Publish docs to gh-pages'</span>,<span class="hljs-function"> -&gt;</span>
+<pre><code class="lang-coffeescript">task <span class="hljs-string">'gh-pages'</span>, <span class="hljs-string">'Publish docs to gh-pages'</span>, <span class="hljs-function">-&gt;</span>
   <span class="hljs-built_in">require</span>(<span class="hljs-string">'brief'</span>).update()
 </code></pre>
 </p>
