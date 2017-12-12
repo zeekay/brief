@@ -1,6 +1,6 @@
 exec   = (require 'executive').quiet
 fs     = require 'fs'
-hljs   = require 'brief-highlight.js'
+hljs   = require 'brief-highlightjs'
 pug    = require 'pug'
 marked = require 'marked'
 

@@ -8,7 +8,7 @@ compilers =
     pug.compile template, pretty: true
 
   markdown: (content) ->
-    hljs   = require 'brief-highlight.js'
+    hljs   = require 'brief-highlightjs'
     marked = require 'marked'
 
     marked.setOptions
