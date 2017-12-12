@@ -1,16 +1,16 @@
-fs   = require 'fs'
-path = require 'path'
+import fs   from 'fs'
+import path from 'path'
+
+import hljs   from 'brief-highlightjs'
+import marked from 'marked'
+import pug    from 'pug'
 
 
 compilers =
   pug: (template) ->
-    pug = require 'pug'
     pug.compile template, pretty: true
 
   markdown: (content) ->
-    hljs   = require 'brief-highlightjs'
-    marked = require 'marked'
-
     marked.setOptions
       gfm:        true
       tables:     true
@@ -20,6 +20,7 @@ compilers =
           try
             hljs.highlight(lang, code).value
           catch err
+            console.error err
             throw new Error "Unable to highlight #{lang}"
         else
           hljs.highlightAuto(code).value
