@@ -1,14 +1,16 @@
-exec = require('executive').quiet
-fs   = require 'fs'
+import fs   from 'fs'
+import exec from 'executive'
+
 
 log = (message) ->
   console.log "- #{message}"
+
 
 # run command and exit if anything bad happens
 run = (cmd, cb = ->) ->
   console.log "> #{cmd}"
 
-  exec cmd, (err, stdout = '', stderr = '') ->
+  exec.quiet cmd, (err, stdout = '', stderr = '') ->
     stderr = stderr.trim()
     stdout = stdout.trim()
 
@@ -16,7 +18,7 @@ run = (cmd, cb = ->) ->
     console.error stderr if stderr
 
     if err?
-      return exec 'git checkout master', ->
+      return exec.quiet 'git checkout master', ->
         process.exit 1
 
     cb null
@@ -27,7 +29,7 @@ export default (options = {}) ->
   template = options.template ? 'zeekay/brief-minimal'
 
   run "git symbolic-ref HEAD refs/heads/#{branch}", ->
-    exec "git status", (err, out) ->
+    exec.quiet "git status", (err, out) ->
       newFileRe = /new file:/
       files = ['.git/index']
 

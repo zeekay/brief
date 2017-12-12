@@ -1,8 +1,8 @@
-exec   = (require 'executive').quiet
-fs     = require 'fs'
-hljs   = require 'brief-highlightjs'
-pug    = require 'pug'
-marked = require 'marked'
+import exec   from 'executive'
+import fs     from 'fs'
+import hljs   from 'brief-highlightjs'
+import pug    from 'pug'
+import marked from 'marked'
 
 
 class Brief
@@ -26,6 +26,7 @@ class Brief
           try
             hljs.highlight(lang, code).value
           catch err
+            console.error err
             throw new Error "Unable to highlight #{lang}"
         else
           hljs.highlightAuto(code).value
@@ -70,7 +71,7 @@ class Brief
   run: (cmd, cb = ->) ->
     console.log "> #{cmd}" unless @quiet
 
-    exec cmd, (err, stdout, stderr) =>
+    exec.quiet cmd, (err, stdout, stderr) =>
       unless @quiet
         stderr = stderr.trim()
         stdout = stdout.trim()
@@ -79,7 +80,7 @@ class Brief
         console.error stderr if stderr
 
       if err?
-        return exec 'git checkout master', ->
+        return exec.quiet 'git checkout master', ->
           process.exit 1
 
       cb null
